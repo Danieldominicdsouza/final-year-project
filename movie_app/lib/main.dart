@@ -1,26 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:movie_app/pages/homeScreen.dart';
+import 'package:movie_app/pages/splashScreen.dart';
 
-void main() {
-  runApp(MyMovie());
-}
+void main() => runApp(MyApp());
 
-
-
-class MyMovie extends StatelessWidget {
+class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(home: Scaffold(
-      body: SafeArea(
-        child:Container(
-          color: Colors.indigo,
-        ),
-
-      ),
-
-    ),);
+    return MaterialApp(
+      title: 'Flutter Demo',
+      initialRoute: '/splash',
+      routes: {
+        '/splash': (context) => SplashScreen(),
+        '/home': (context) => HomePage(),
+        //'login': (context) => LoginPage(),
+      },
+    );
   }
-
-
 }
-
