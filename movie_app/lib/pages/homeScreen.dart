@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:movie_app/components/mediaCard.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -6,6 +7,68 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  // String _posterName1 = 'movies/focus.jpg';
+  // String _posterName2 = 'movies/avengers_infinity_war.jpg';
+  // String _posterName3 = 'movies/mib.jpg';
+
+  List<Widget> cardList = [];
+
+  @override
+  void initState() {
+    super.initState();
+    cardList = _getMediaCard();
+  }
+
+  void removeCard(int index) {
+    setState(() {
+      cardList.removeAt(index);
+    });
+  }
+
+  List<Widget> _getMediaCard() {
+    String _posterName1 = 'movies/focus.jpg';
+    String _posterName2 = 'movies/avengers_infinity_war.jpg';
+    String _posterName3 = 'movies/mib.jpg';
+
+    List<MediaCard> cards = [];
+    cards.add(MediaCard(poster: _posterName1, position: 10));
+    cards.add(MediaCard(poster: _posterName2, position: 20));
+    cards.add(MediaCard(poster: _posterName3, position: 30));
+
+    List<Widget> cardList = [];
+
+    for (var i = 0; i < 3; i++) {
+      cardList.add(
+        Draggable(
+          onDragEnd: (drag) {
+            removeCard(i);
+          },
+          feedback: Card(
+            color: Color.fromARGB(0, 0, 0, 0),
+            child: Image(
+              image: AssetImage(cards[i]
+                  .poster), //you have to add .poster because it's a list of MediaCard not String
+              // width: 500,
+              // height: 300,
+            ),
+          ),
+          child: Card(
+            color: Color.fromARGB(0, 0, 0, 0),
+            child: Container(
+              height: 500,
+              width: 300,
+              child: Image(
+                image: AssetImage(cards[i].poster),
+              ),
+            ),
+          ),
+        ),
+      );
+    }
+
+    return cardList;
+  }
+
   @override
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
@@ -68,15 +131,9 @@ class _HomePageState extends State<HomePage> {
                   child: Column(
                     children: [
                       Expanded(
-                        flex: 3,
-                        child: Card(
-                          color: Color.fromARGB(0, 0, 0, 0),
-                          child: Image(
-                            image:
-                                AssetImage('movies/avengers_infinity_war.jpg'),
-                            // width: 500,
-                            // height: 300,
-                          ),
+                        flex: 2,
+                        child: Stack(
+                          children: cardList,
                         ),
                       ),
                       Expanded(
