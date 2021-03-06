@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:movie_app/pages/authentication/authenticationWrapper.dart';
 import 'package:movie_app/pages/homeScreen.dart';
 import 'package:movie_app/pages/splashScreen.dart';
 
@@ -14,7 +15,7 @@ class MyApp extends StatelessWidget {
       routes: {
         '/splash': (context) => SplashScreen(),
         '/home': (context) => HomePage(),
-        //'login': (context) => LoginPage(),
+        '/auth': (context) => Authentication(),
       },
     );
   }

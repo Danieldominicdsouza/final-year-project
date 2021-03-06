@@ -26,9 +26,9 @@ class _HomePageState extends State<HomePage> {
   }
 
   List<Widget> _getMediaCard() {
-    String _posterName1 = 'movies/focus.jpg';
-    String _posterName2 = 'movies/avengers_infinity_war.jpg';
-    String _posterName3 = 'movies/mib.jpg';
+    String _posterName1 = 'assets/movies/focus.jpg';
+    String _posterName2 = 'assets/movies/avengers_infinity_war.jpg';
+    String _posterName3 = 'assets/movies/mib.jpg';
 
     List<MediaCard> cards = [];
     cards.add(MediaCard(poster: _posterName1, position: 10));
