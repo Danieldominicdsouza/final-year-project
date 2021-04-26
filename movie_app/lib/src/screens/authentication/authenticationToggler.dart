@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:movie_app/pages/authentication/loginScreen.dart';
-import 'package:movie_app/pages/authentication/registerScreen.dart';
+import 'package:movie_mate/src/screens/authentication/loginScreen.dart';
+import 'package:movie_mate/src/screens/authentication/registerScreen.dart';
 
-class Authentication extends StatefulWidget {
+class AuthenticationToggler extends StatefulWidget {
   @override
   _AuthenticationState createState() => _AuthenticationState();
 }
 
-class _AuthenticationState extends State<Authentication> {
-  bool showSignIn = true;
+class _AuthenticationState extends State<AuthenticationToggler> {
+  bool showSignIn = false;
   void toggleView() {
     setState(() {
       showSignIn = !showSignIn;
@@ -18,10 +18,10 @@ class _AuthenticationState extends State<Authentication> {
   @override
   Widget build(BuildContext context) {
     return showSignIn == true
-        ? RegisterPage(
+        ? LoginScreen(
             toggleView: toggleView,
           )
-        : LoginPage(
+        : RegisterScreen(
             toggleView: toggleView,
           );
   }

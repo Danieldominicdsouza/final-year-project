@@ -1,16 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:movie_app/components/mediaCard.dart';
+import 'package:movie_mate/src/components/mediaCard.dart';
+import 'package:movie_mate/src/services/authenticaitonService.dart';
 
-class HomePage extends StatefulWidget {
+class HomeScreen extends StatefulWidget {
   @override
-  _HomePageState createState() => _HomePageState();
+  _HomeScreenState createState() => _HomeScreenState();
 }
 
-class _HomePageState extends State<HomePage> {
-  // String _posterName1 = 'movies/focus.jpg';
-  // String _posterName2 = 'movies/avengers_infinity_war.jpg';
-  // String _posterName3 = 'movies/mib.jpg';
-
+class _HomeScreenState extends State<HomeScreen> {
   List<Widget> cardList = [];
 
   @override
@@ -71,7 +68,8 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    final Size size = MediaQuery.of(context).size;
+    final Size screenSize = MediaQuery.of(context).size;
+    final _authService = AuthService();
 
     return SafeArea(
       child: Container(
@@ -80,10 +78,12 @@ class _HomePageState extends State<HomePage> {
           appBar: AppBar(
             backgroundColor: Colors.black,
             leading: IconButton(
-              icon: Icon(Icons.menu_rounded),
-              //color: Color.fromARGB(255, 203, 155, 81), //Hex CB9B51
-              color: Colors.redAccent,
-              onPressed: () {},
+              icon: Icon(Icons.logout),
+              color: Color.fromARGB(255, 203, 155, 81), //Hex CB9B51
+              //color: Colors.amber,
+              onPressed: () {
+                _authService.signOut();
+              },
             ),
             actions: [
               Padding(
@@ -93,7 +93,7 @@ class _HomePageState extends State<HomePage> {
                   'Username',
                   style: TextStyle(
                       fontFamily: 'RobotoCondensed',
-                      color: Colors.redAccent,
+                      color: Colors.amber,
                       shadows: <Shadow>[
                         Shadow(
                           offset: Offset(1.0, 1.5),
@@ -126,8 +126,8 @@ class _HomePageState extends State<HomePage> {
                   height: 20,
                 ),
                 Container(
-                  width: size.width,
-                  height: size.height,
+                  width: screenSize.width,
+                  height: screenSize.height,
                   child: Column(
                     children: [
                       Expanded(
