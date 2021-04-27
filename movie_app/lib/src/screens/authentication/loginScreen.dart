@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:movie_mate/src/services/authenticaitonService.dart';
+import 'package:movie_mate/src/widgets/auth_custom_widgets.dart';
 
 class LoginScreen extends StatefulWidget {
   final Function toggleView;
@@ -12,8 +13,8 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   final AuthService _authService = AuthService();
   final _formKey = GlobalKey<FormState>();
-  final TextEditingController emailController = TextEditingController();
-  final TextEditingController passwordController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
   String email = '', password = '', error = '';
 
   void onListen() => setState(() {});
@@ -21,31 +22,31 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   void initState() {
     super.initState();
-    emailController.addListener(onListen);
-    passwordController.addListener(onListen);
+    _emailController.addListener(onListen);
+    _passwordController.addListener(onListen);
   }
 
   @override
   void dispose() {
-    emailController.dispose();
-    passwordController.dispose();
-    emailController.removeListener(onListen);
-    passwordController.removeListener(onListen);
+    _emailController.dispose();
+    _passwordController.dispose();
+    _emailController.removeListener(onListen);
+    _passwordController.removeListener(onListen);
     super.dispose();
   }
 
   Widget _emailTextField() {
     return TextFormField(
-      controller: emailController,
+      controller: _emailController,
       validator: (userEmail) => _authService.emailValidation(userEmail),
       onChanged: (userEmail) => setState(() => email = userEmail.trim()),
       decoration: InputDecoration(
         prefixIcon: Icon(Icons.email),
-        suffixIcon: emailController.text.isEmpty
+        suffixIcon: _emailController.text.isEmpty
             ? Container(width: 0)
             : IconButton(
                 icon: Icon(Icons.close),
-                onPressed: () => emailController.clear(),
+                onPressed: () => _emailController.clear(),
               ),
         hintText: 'Enter your Email',
         focusedBorder: OutlineInputBorder(
@@ -69,7 +70,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   Widget _passwordTextField() {
     return TextFormField(
-      controller: passwordController,
+      controller: _passwordController,
       obscureText: true,
       validator: (userPassword) =>
           _authService.passwordValidation(userPassword),
@@ -85,11 +86,11 @@ class _LoginScreenState extends State<LoginScreen> {
         prefixIcon: Icon(
           Icons.lock,
         ),
-        suffixIcon: passwordController.text.isEmpty
+        suffixIcon: _passwordController.text.isEmpty
             ? Container(width: 0)
             : IconButton(
                 icon: Icon(Icons.close),
-                onPressed: () => passwordController.clear(),
+                onPressed: () => _passwordController.clear(),
               ),
         focusedBorder: OutlineInputBorder(
           borderSide: BorderSide(color: Colors.blueGrey),
@@ -177,6 +178,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   icon: Icon(Icons.person_outline),
                   color: Colors.amber,
                   onPressed: () {
+                    print('Switched to Register Screen');
                     widget.toggleView();
                   },
                 )
@@ -196,37 +198,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 Container(
                   height: screenSize.height - 400,
                   width: screenSize.width - 60,
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(20),
-                      gradient: LinearGradient(colors: [
-                        //Color(0xFF462523), //1
-                        Color(0xFF512F27), //2
-                        Color(0xFF6C4730), //3
-                        Color(0xFF956B3E), //4
-                        Color(0xFFBC8E4C),
-                        Color(0xFFCA9A51), //5
-                        Color(0xFFE2C167), //6
-                        Color(0xFFEDD372), //7
-                        Color(0xFFF0D874), //8
-                        Color(0xFFF6E27A), //9
-                        Color(0xFFF6E68C),
-                        Color(0xFFF6E589), //10
-                        Color(0xFFF6EEAF),
-                        Color(0xFFF6F2C0), //11
-                        Color(0xFFF6EEAF),
-                        Color(0xFFF6E589), //10
-                        Color(0xFFF6E68C),
-                        Color(0xFFF6E27A), //9
-                        Color(0xFFF0D874), //8
-                        Color(0xFFEDD372), //7
-                        Color(0xFFE2C167), //6
-                        Color(0xFFCA9A51), //5
-                        Color(0xFFBC8E4C),
-                        Color(0xFF956B3E), //4
-                        Color(0xFF6C4730), //3
-                        Color(0xFF512F27), //2
-                        //Color(0xFF462523), //1
-                      ])),
+                  decoration: goldenContainerBoxDecoration(),
                   child: Stack(
                     //fit: StackFit.expand,
                     children: <Widget>[
@@ -238,23 +210,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
-                                Text(
-                                  "Welcome Back",
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                    fontSize: 20,
-                                    fontFamily: 'RobotoCondensed',
-                                    fontWeight: FontWeight.bold,
-                                    // shadows: <Shadow>[
-                                    //   Shadow(
-                                    //     offset: Offset(1.0, 1.5),
-                                    //     color:
-                                    //         Color.fromARGB(80, 255, 255, 255),
-                                    //     blurRadius: 1,
-                                    //   ),
-                                    // ],
-                                  ),
-                                ),
+                                goldenContainerText('Welcome Back'),
                                 SizedBox(height: 20),
                                 _emailTextField(),
                                 SizedBox(height: 30),
@@ -284,7 +240,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       TextButton(
                         //splashColor: Colors.white,
                         onPressed: () {
-                          print('Switched to Register Page');
+                          print('Switched to Register Screen');
                           widget.toggleView();
                         },
                         child: Text(
@@ -309,30 +265,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         fontSize: 15.0),
                   ),
                 ),
-                Container(
-                  decoration: BoxDecoration(
-                      color: Colors.black,
-                      borderRadius: BorderRadius.circular(20)),
-                  child: ElevatedButton.icon(
-                    style: ElevatedButton.styleFrom(primary: Colors.white),
-                    onPressed: () {
-                      print('google login page here');
-                    },
-                    label: Text(
-                      'Sign In With Google',
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 15,
-                        fontFamily: 'RobotoCondensed',
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    icon: Icon(
-                      Icons.android,
-                      color: Colors.green,
-                    ),
-                  ),
-                ),
+                googleSignInButton(),
               ],
             ),
           ),

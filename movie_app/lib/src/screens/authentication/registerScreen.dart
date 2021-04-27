@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:movie_mate/src/services/authenticaitonService.dart';
+import 'package:movie_mate/src/widgets/auth_custom_widgets.dart';
 
 class RegisterScreen extends StatefulWidget {
   final Function toggleView;
@@ -12,8 +13,8 @@ class RegisterScreen extends StatefulWidget {
 class _RegisterScreenState extends State<RegisterScreen> {
   final AuthService _authService = AuthService();
   final _formKey = GlobalKey<FormState>();
-  final TextEditingController emailController = TextEditingController();
-  final TextEditingController passwordController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
   String email = "", password = "", error = "";
 
   void onListen() => setState(() {});
@@ -33,32 +34,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   Widget _emailTextField() {
     return TextFormField(
-      controller: emailController,
+      controller: _emailController,
       validator: (userEmail) => _authService.emailValidation(userEmail),
       onChanged: (userEmail) => setState(() => email = userEmail.trim()),
-      decoration: InputDecoration(
-        prefixIcon: Icon(Icons.email),
-        suffixIcon: emailController.text.isEmpty
-            ? Container(width: 0)
-            : IconButton(
-                icon: Icon(Icons.close),
-                onPressed: () => emailController.clear(),
-              ),
-        hintText: 'Enter your Email',
-        focusedBorder: OutlineInputBorder(
-          borderSide: BorderSide(color: Colors.blueGrey),
-          borderRadius: BorderRadius.circular(50),
-        ),
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(50),
-        ),
-        labelText: 'Email',
-        labelStyle: TextStyle(
-          color: Colors.grey[800],
-        ),
-        isDense: true, // Added this
-        contentPadding: EdgeInsets.all(0), // Added this
-      ),
+      decoration:
+          textInputDecoration('Email', 'Enter an Email', _emailController)
+              .copyWith(prefixIcon: Icon(Icons.email)),
       keyboardType: TextInputType.emailAddress,
       autofillHints: [AutofillHints.email],
     );
@@ -66,40 +47,15 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   Widget _passwordTextField() {
     return TextFormField(
-      controller: passwordController,
+      controller: _passwordController,
       obscureText: true,
       validator: (userPassword) =>
           _authService.passwordValidation(userPassword),
-      // validator: (userPassword) => userPassword
-      //             .length >
-      //         6
-      //     ? null
-      //     : 'Enter a password longer than 6 chars',
       onChanged: (userPassword) =>
           setState(() => password = userPassword.trim()),
-      decoration: InputDecoration(
-        hintText: 'Enter a secure password',
-        prefixIcon: Icon(
-          Icons.lock,
-        ),
-        suffixIcon: passwordController.text.isEmpty
-            ? Container(width: 0)
-            : IconButton(
-                icon: Icon(Icons.close),
-                onPressed: () => passwordController.clear(),
-              ),
-        focusedBorder: OutlineInputBorder(
-          borderSide: BorderSide(color: Colors.blueGrey),
-          borderRadius: BorderRadius.circular(50),
-        ),
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(50),
-        ),
-        labelText: 'Password',
-        labelStyle: TextStyle(color: Colors.grey[800]),
-        isDense: true,
-        contentPadding: EdgeInsets.all(0),
-      ),
+      decoration: textInputDecoration(
+              'Password', 'Enter a password', _passwordController)
+          .copyWith(prefixIcon: Icon(Icons.lock)),
     );
   }
 
@@ -135,16 +91,16 @@ class _RegisterScreenState extends State<RegisterScreen> {
   @override
   void initState() {
     super.initState();
-    emailController.addListener(onListen);
-    passwordController.addListener(onListen);
+    _emailController.addListener(onListen);
+    _passwordController.addListener(onListen);
   }
 
   @override
   void dispose() {
-    emailController.dispose();
-    passwordController.dispose();
-    emailController.removeListener(onListen);
-    passwordController.removeListener(onListen);
+    _emailController.dispose();
+    _passwordController.dispose();
+    _emailController.removeListener(onListen);
+    _passwordController.removeListener(onListen);
     super.dispose();
   }
 
@@ -156,20 +112,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
         backgroundColor: Colors.black,
         appBar: AppBar(
           backgroundColor: Colors.grey[900],
-          title: Text(
-            "MovieMate",
-            style: TextStyle(
-                color: Colors.amber,
-                fontFamily: 'RobotoCondensed',
-                fontWeight: FontWeight.w600,
-                shadows: <Shadow>[
-                  Shadow(
-                    offset: Offset(1.0, 1.5),
-                    color: Colors.black, // Color.fromARGB(80, 255, 255, 255),
-                    blurRadius: 1,
-                  ),
-                ]),
-          ),
+          title: appBarAppText(),
           actions: [
             Row(
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -191,6 +134,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   color: Colors.amber,
                   onPressed: () {
                     widget.toggleView();
+                    print('Switched to Login Screen');
                   },
                 )
               ],
@@ -213,38 +157,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       Container(
                         height: screenSize.height - 400,
                         width: screenSize.width - 60,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(20),
-                          gradient: LinearGradient(colors: [
-                            //Color(0xFF462523), //1
-                            Color(0xFF512F27), //2
-                            Color(0xFF6C4730), //3
-                            Color(0xFF956B3E), //4
-                            Color(0xFFBC8E4C),
-                            Color(0xFFCA9A51), //5
-                            Color(0xFFE2C167), //6
-                            Color(0xFFEDD372), //7
-                            Color(0xFFF0D874), //8
-                            Color(0xFFF6E27A), //9
-                            Color(0xFFF6E68C),
-                            Color(0xFFF6E589), //10
-                            Color(0xFFF6EEAF),
-                            Color(0xFFF6F2C0), //11
-                            Color(0xFFF6EEAF),
-                            Color(0xFFF6E589), //10
-                            Color(0xFFF6E68C),
-                            Color(0xFFF6E27A), //9
-                            Color(0xFFF0D874), //8
-                            Color(0xFFEDD372), //7
-                            Color(0xFFE2C167), //6
-                            Color(0xFFCA9A51), //5
-                            Color(0xFFBC8E4C),
-                            Color(0xFF956B3E), //4
-                            Color(0xFF6C4730), //3
-                            Color(0xFF512F27), //2
-                            //Color(0xFF462523), //1
-                          ]),
-                        ),
+                        decoration: goldenContainerBoxDecoration(),
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
@@ -253,15 +166,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
-                                  Text(
-                                    "Welcome to MovieMate",
-                                    textAlign: TextAlign.center,
-                                    style: TextStyle(
-                                      fontSize: 20,
-                                      fontFamily: 'RobotoCondensed',
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
+                                  goldenContainerText('Welcome to MovieMate'),
                                   SizedBox(
                                     height: 20,
                                   ),
@@ -286,15 +191,15 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
                       Text(
-                        "Don't have an account?",
+                        "Already have an account?",
                         style: TextStyle(
                           color: Colors.white,
                         ),
                       ),
                       TextButton(
                         onPressed: () {
-                          print('signup page here');
                           widget.toggleView();
+                          print('Switched to Login Screen');
                         },
                         child: Text(
                           'Click Here',
@@ -317,32 +222,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         fontSize: 15.0),
                   ),
                 ),
-                Container(
-                  // height: 50,
-                  // width: 250,
-                  decoration: BoxDecoration(
-                      color: Colors.black,
-                      borderRadius: BorderRadius.circular(20)),
-                  child: ElevatedButton.icon(
-                    style: ElevatedButton.styleFrom(primary: Colors.white),
-                    onPressed: () {
-                      print('google login page here');
-                    },
-                    label: Text(
-                      'Sign In With Google',
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 15,
-                        fontFamily: 'RobotoCondensed',
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    icon: Icon(
-                      Icons.android,
-                      color: Colors.green,
-                    ),
-                  ),
-                ),
+                googleSignInButton(),
               ],
             ),
           ),
