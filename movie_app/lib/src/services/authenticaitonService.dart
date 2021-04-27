@@ -77,13 +77,13 @@ class AuthService {
     }
   }
 
-  String EmailValidation(String email) {
+  String emailValidation(String email) {
     return email != null && EmailValidator.validate(email)
         ? null
         : 'Enter a valid Email';
   }
 
-  String PasswordValidation(String password) {
+  String passwordValidation(String password) {
     return password.length > 6 ? null : 'Enter a password longer than 6 chars';
   }
 }

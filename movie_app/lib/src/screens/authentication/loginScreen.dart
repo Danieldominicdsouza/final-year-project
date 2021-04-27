@@ -1,7 +1,5 @@
-import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:movie_mate/src/services/authenticaitonService.dart';
-import 'package:movie_mate/src/shared/textFields.dart';
 
 class LoginScreen extends StatefulWidget {
   final Function toggleView;
@@ -36,10 +34,10 @@ class _LoginScreenState extends State<LoginScreen> {
     super.dispose();
   }
 
-  Widget _EmailTextField() {
+  Widget _emailTextField() {
     return TextFormField(
       controller: emailController,
-      validator: (userEmail) => _authService.EmailValidation(userEmail),
+      validator: (userEmail) => _authService.emailValidation(userEmail),
       onChanged: (userEmail) => setState(() => email = userEmail.trim()),
       decoration: InputDecoration(
         prefixIcon: Icon(Icons.email),
@@ -69,12 +67,12 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  Widget _PasswordTextField() {
+  Widget _passwordTextField() {
     return TextFormField(
       controller: passwordController,
       obscureText: true,
       validator: (userPassword) =>
-          _authService.PasswordValidation(userPassword),
+          _authService.passwordValidation(userPassword),
       // validator: (userPassword) => userPassword
       //             .length >
       //         6
@@ -108,7 +106,7 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  _LoginButton() {
+  _loginButton() {
     return Stack(
       children: <Widget>[
         Container(
@@ -258,9 +256,9 @@ class _LoginScreenState extends State<LoginScreen> {
                                   ),
                                 ),
                                 SizedBox(height: 20),
-                                _EmailTextField(),
+                                _emailTextField(),
                                 SizedBox(height: 30),
-                                _PasswordTextField(),
+                                _passwordTextField(),
                               ],
                             ),
                           ),
@@ -269,7 +267,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     ],
                   ),
                 ),
-                _LoginButton(),
+                _loginButton(),
                 Container(
                   width: double.infinity,
                   child: Row(

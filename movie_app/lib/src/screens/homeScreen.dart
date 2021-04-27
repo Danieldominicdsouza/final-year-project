@@ -77,13 +77,28 @@ class _HomeScreenState extends State<HomeScreen> {
           backgroundColor: Colors.black,
           appBar: AppBar(
             backgroundColor: Colors.black,
-            leading: IconButton(
-              icon: Icon(Icons.logout),
-              color: Color.fromARGB(255, 203, 155, 81), //Hex CB9B51
-              //color: Colors.amber,
-              onPressed: () {
-                _authService.signOut();
-              },
+            leading: Row(
+              children: [
+                IconButton(
+                  icon: Icon(Icons.logout),
+                  color: Color.fromARGB(255, 203, 155, 81), //Hex CB9B51
+                  //color: Colors.amber,
+                  onPressed: () {
+                    _authService.signOut();
+                  },
+                ),
+                TextButton(
+                  onPressed: () {},
+                  child: Text(
+                    'MovieMate',
+                    style: TextStyle(
+                      color: Colors.amber,
+                      fontFamily: 'RobotoCondensed',
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              ],
             ),
             actions: [
               Padding(

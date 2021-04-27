@@ -1,4 +1,3 @@
-import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:movie_mate/src/services/authenticaitonService.dart';
 
@@ -19,7 +18,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   void onListen() => setState(() {});
 
-  Future<void> _RegisterUser(String email, String password) async {
+  Future<void> _registerUser(String email, String password) async {
     if (_formKey.currentState.validate()) {
       dynamic result =
           _authService.registerWithEmailAndPassword(email, password);
@@ -32,10 +31,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
     }
   }
 
-  Widget _EmailTextField() {
+  Widget _emailTextField() {
     return TextFormField(
       controller: emailController,
-      validator: (userEmail) => _authService.EmailValidation(userEmail),
+      validator: (userEmail) => _authService.emailValidation(userEmail),
       onChanged: (userEmail) => setState(() => email = userEmail.trim()),
       decoration: InputDecoration(
         prefixIcon: Icon(Icons.email),
@@ -65,12 +64,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
     );
   }
 
-  Widget _PasswordTextField() {
+  Widget _passwordTextField() {
     return TextFormField(
       controller: passwordController,
       obscureText: true,
       validator: (userPassword) =>
-          _authService.PasswordValidation(userPassword),
+          _authService.passwordValidation(userPassword),
       // validator: (userPassword) => userPassword
       //             .length >
       //         6
@@ -104,7 +103,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
     );
   }
 
-  _SignUpButton() {
+  _signUpButton() {
     return Stack(
       children: [
         Container(
@@ -116,7 +115,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
           alignment: Alignment.center,
           height: 100.0,
           child: TextButton(
-            onPressed: () => _RegisterUser(email, password).then(
+            onPressed: () => _registerUser(email, password).then(
                 (_) => Navigator.pushReplacementNamed(context, '/verify')),
             child: Text(
               'Sign Up',
@@ -266,11 +265,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                   SizedBox(
                                     height: 20,
                                   ),
-                                  _EmailTextField(),
+                                  _emailTextField(),
                                   SizedBox(
                                     height: 30.0,
                                   ),
-                                  _PasswordTextField(),
+                                  _passwordTextField(),
                                 ],
                               ),
                             ),
@@ -280,7 +279,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     ],
                   ),
                 ),
-                _SignUpButton(),
+                _signUpButton(),
                 Container(
                   width: double.infinity,
                   child: Row(
