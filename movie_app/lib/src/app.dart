@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:movie_mate/src/screens/authentication/verifyScreen.dart';
+import 'package:movie_mate/src/screens/beta_homeScreen.dart';
 import 'package:movie_mate/src/services/authenticaitonService.dart';
 import 'package:provider/provider.dart';
 
@@ -13,7 +14,8 @@ class App extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return StreamProvider<MyUser>.value(
-      value: AuthService().user, // Stream of user Check AuthService class Stream<Myser>
+      value: AuthService()
+          .user, // Stream of user Check AuthService class Stream<Myser>
       initialData: null,
       child: MaterialApp(
         title: 'MovieMate',
@@ -22,10 +24,11 @@ class App extends StatelessWidget {
           primaryColor: Colors.black,
           //brightness: Brightness.dark,
         ),
-        initialRoute: '/splash',
+        initialRoute: '/auth', //splash',
         routes: {
           '/splash': (context) => SplashScreen(),
           '/home': (context) => HomeScreen(),
+          '/testhome': (context) => TestHomeScreen(),
           '/auth': (context) => AuthState(),
           '/authToggle': (context) => AuthenticationToggler(),
           '/verify': (context) => VerfiyScreen(),

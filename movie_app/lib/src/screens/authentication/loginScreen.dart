@@ -166,7 +166,7 @@ class _LoginScreenState extends State<LoginScreen> {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Text(
-                  'Register →',
+                  'Sign In',
                   style: TextStyle(
                     fontSize: 10,
                     color: Colors.grey[600],

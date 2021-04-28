@@ -13,16 +13,18 @@ class RegisterScreen extends StatefulWidget {
 class _RegisterScreenState extends State<RegisterScreen> {
   final AuthService _authService = AuthService();
   final _formKey = GlobalKey<FormState>();
+  final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  String email = "", password = "", error = "";
+  String email = "", password = "", error = "", username = "";
 
   void onListen() => setState(() {});
 
-  Future<void> _registerUser(String email, String password) async {
+  Future<void> _registerUser(
+      String email, String password, String username) async {
     if (_formKey.currentState.validate()) {
       dynamic result =
-          _authService.registerWithEmailAndPassword(email, password);
+          _authService.registerWithEmailAndPassword(email, password, username);
       if (result == null) {
         setState(() {
           error = 'Please enter valid inputs';
@@ -30,6 +32,21 @@ class _RegisterScreenState extends State<RegisterScreen> {
       } else
         print('Registeration success');
     }
+  }
+
+  Widget _usernameTextField() {
+    return TextFormField(
+      controller: _usernameController,
+      validator: (username) => username.isNotEmpty && username.length > 4
+        ? null
+        : 'Enter a valid Username',//_authService.usernameValidation(username),
+      onChanged: (username) => setState(() => username = username.trim()),
+      decoration: textInputDecoration(
+              'Username', 'Enter an username', _usernameController)
+          .copyWith(prefixIcon: Icon(Icons.person_sharp)),
+      keyboardType: TextInputType.emailAddress,
+      autofillHints: [AutofillHints.email],
+    );
   }
 
   Widget _emailTextField() {
@@ -71,7 +88,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
           alignment: Alignment.center,
           height: 100.0,
           child: TextButton(
-            onPressed: () => _registerUser(email, password).then(
+            onPressed: () => _registerUser(email, password, username)
+            .then(
                 (_) => Navigator.pushReplacementNamed(context, '/verify')),
             child: Text(
               'Sign Up',
@@ -121,7 +139,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   width: 10,
                 ),
                 Text(
-                  'Sign In →',
+                  'Register',
                   style: TextStyle(
                     fontSize: 10,
                     color: Colors.grey[600],
@@ -158,27 +176,33 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         height: screenSize.height - 400,
                         width: screenSize.width - 60,
                         decoration: goldenContainerBoxDecoration(),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Container(
-                              padding: EdgeInsets.only(left: 20, right: 20),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  goldenContainerText('Welcome to MovieMate'),
-                                  SizedBox(
-                                    height: 20,
-                                  ),
-                                  _emailTextField(),
-                                  SizedBox(
-                                    height: 30.0,
-                                  ),
-                                  _passwordTextField(),
-                                ],
+                        child: SingleChildScrollView(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Container(
+                                padding: EdgeInsets.only(left: 20, right: 20),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    goldenContainerText('Welcome to MovieMate'),
+                                    SizedBox(
+                                      height: 20,
+                                    ),
+                                    _usernameTextField(),
+                                    SizedBox(
+                                      height: 20.0,
+                                    ),
+                                    _emailTextField(),
+                                    SizedBox(
+                                      height: 20.0,
+                                    ),
+                                    _passwordTextField(),
+                                  ],
+                                ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
                       ),
                     ],
