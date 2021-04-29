@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:movie_mate/src/screens/authentication/verifyScreen.dart';
 import 'package:movie_mate/src/screens/beta_homeScreen.dart';
 import 'package:movie_mate/src/services/authValidation_bloc.dart';
 import 'package:movie_mate/src/services/authenticaitonService.dart';
@@ -32,7 +31,6 @@ class App extends StatelessWidget {
             '/home': (context) => HomeScreen(),
             '/testhome': (context) => TestHomeScreen(),
             '/auth': (context) => AuthState(),
-            '/verify': (context) => VerfiyScreen(),
           },
         ),
       ),
