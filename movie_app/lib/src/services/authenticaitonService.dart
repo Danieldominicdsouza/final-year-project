@@ -7,12 +7,9 @@ class AuthService {
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
   final DatabaseService _databaseService = DatabaseService();
 
-//TODO: Find dispaly name of user and how it's set, if possible create documents using username and not a uid
-
+  //Creates MyUser objet from a Firebase User
   MyUser _myUserFromFirebase(User user) {
-    return user != null
-        ? MyUser(uid: user.uid, email: user.email, username: user.displayName)
-        : null;
+    return user != null ? MyUser(uid: user.uid, email: user.email) : null;
   }
 
   //Auth change Firebase user stream
@@ -41,10 +38,10 @@ class AuthService {
       UserCredential userResult = await _firebaseAuth
           .signInWithEmailAndPassword(email: email, password: password);
       User user = userResult.user;
-      print(_myUserFromFirebase(user));
       return _myUserFromFirebase(user);
     } on FirebaseAuthException catch (e) {
       return e.message;
+      //return null;
     }
   }
 
@@ -55,16 +52,8 @@ class AuthService {
       UserCredential userResult = await _firebaseAuth
           .createUserWithEmailAndPassword(email: email, password: password);
       User user = userResult.user;
-      await verifyEmail();
       user.updateProfile(displayName: username);
-      //TODO : Check this out
-      Map<String, String> userInfoMap = {
-        'name': _myUserFromFirebase(user).username,
-        'email': _myUserFromFirebase(user).email
-      };
-      _databaseService.updateUserInfo(userInfoMap);
-      //Check it till here
-      print(_myUserFromFirebase(user).username);
+      print('User display name is ${user.displayName}');
       return _myUserFromFirebase(user);
     } on FirebaseAuthException catch (e) {
       print(e.toString());
@@ -108,9 +97,9 @@ class AuthService {
 
   String emailValidation(String email) {
     if (email != null && EmailValidator.validate(email))
-        // RegExp(r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$')
-        //     .hasMatch(email)) {
-        {
+    // RegExp(r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$')
+    //     .hasMatch(email)) {
+    {
       return null;
     } else {
       return 'Enter a valid Email';

@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:movie_mate/src/global/shared/constants.dart';
+import 'package:movie_mate/src/services/authValidation_bloc.dart';
 import 'package:movie_mate/src/services/authenticaitonService.dart';
 import 'package:movie_mate/src/widgets/auth_custom_widgets.dart';
+import 'package:provider/provider.dart';
 
 class RegisterScreen extends StatefulWidget {
   final Function toggleView;
@@ -16,107 +19,22 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  String email = "", password = "", error = "", username = "";
-
-  void onListen() => setState(() {});
-
-  Future<void> _registerUser(
-      String email, String password, String username) async {
-    if (_formKey.currentState.validate()) {
-      dynamic result =
-          _authService.registerWithEmailAndPassword(email, password, username);
-      if (result == null) {
-        setState(() {
-          error = 'Please enter valid inputs';
-        });
-      } else
-        print('Registeration success');
-    }
-  }
-
-  Widget _usernameTextField() {
-    return TextFormField(
-      controller: _usernameController,
-      validator: (username) => username.isNotEmpty && username.length > 4
-        ? null
-        : 'Enter a valid Username',//_authService.usernameValidation(username),
-      onChanged: (username) => setState(() => username = username.trim()),
-      decoration: textInputDecoration(
-              'Username', 'Enter an username', _usernameController)
-          .copyWith(prefixIcon: Icon(Icons.person_sharp)),
-      keyboardType: TextInputType.emailAddress,
-      autofillHints: [AutofillHints.email],
-    );
-  }
-
-  Widget _emailTextField() {
-    return TextFormField(
-      controller: _emailController,
-      validator: (userEmail) => _authService.emailValidation(userEmail),
-      onChanged: (userEmail) => setState(() => email = userEmail.trim()),
-      decoration:
-          textInputDecoration('Email', 'Enter an Email', _emailController)
-              .copyWith(prefixIcon: Icon(Icons.email)),
-      keyboardType: TextInputType.emailAddress,
-      autofillHints: [AutofillHints.email],
-    );
-  }
-
-  Widget _passwordTextField() {
-    return TextFormField(
-      controller: _passwordController,
-      obscureText: true,
-      validator: (userPassword) =>
-          _authService.passwordValidation(userPassword),
-      onChanged: (userPassword) =>
-          setState(() => password = userPassword.trim()),
-      decoration: textInputDecoration(
-              'Password', 'Enter a password', _passwordController)
-          .copyWith(prefixIcon: Icon(Icons.lock)),
-    );
-  }
-
-  _signUpButton() {
-    return Stack(
-      children: [
-        Container(
-          alignment: Alignment.center,
-          child: Image.asset('assets/images/ticket.png',
-              width: 56.18, height: 105.0),
-        ),
-        Container(
-          alignment: Alignment.center,
-          height: 100.0,
-          child: TextButton(
-            onPressed: () => _registerUser(email, password, username)
-            .then(
-                (_) => Navigator.pushReplacementNamed(context, '/verify')),
-            child: Text(
-              'Sign Up',
-              style: TextStyle(
-                color: Colors.black,
-                fontSize: 12,
-                fontFamily: 'RobotoCondensed',
-                fontWeight: FontWeight.w600,
-              ),
-            ),
-          ),
-        ),
-      ],
-    );
-  }
+  String email = '', password = '', username = '';
 
   @override
   void initState() {
     super.initState();
+    _usernameController.addListener(onListen);
     _emailController.addListener(onListen);
     _passwordController.addListener(onListen);
   }
 
   @override
   void dispose() {
+    _usernameController.dispose();
     _emailController.dispose();
     _passwordController.dispose();
+    _usernameController.removeListener(onListen);
     _emailController.removeListener(onListen);
     _passwordController.removeListener(onListen);
     super.dispose();
@@ -124,13 +42,14 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final validationBloc = Provider.of<AuthValidationBloc>(context);
     final Size screenSize = MediaQuery.of(context).size;
     return SafeArea(
       child: Scaffold(
         backgroundColor: Colors.black,
         appBar: AppBar(
           backgroundColor: Colors.grey[900],
-          title: appBarAppText(),
+          title: appBarText,
           actions: [
             Row(
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -159,99 +78,194 @@ class _RegisterScreenState extends State<RegisterScreen> {
             ),
           ],
         ),
-        body: Form(
-          key: _formKey,
-          child: SingleChildScrollView(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: <Widget>[
-                SizedBox(
-                  height: 30,
+        body: SingleChildScrollView(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              SizedBox(
+                height: 30,
+              ),
+              Container(
+                height: screenSize.height - 350,
+                width: screenSize.width - 60,
+                decoration: goldenContainerBoxDecoration(),
+                child: SingleChildScrollView(
+                  child: Container(
+                    padding: EdgeInsets.only(left: 20, right: 20, top: 20),
+                    child: Form(
+                      key: _formKey,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          goldenContainerText('Welcome to MovieMate'),
+                          SizedBox(height: 25.0),
+                          _usernameTextField(validationBloc),
+                          SizedBox(height: 25.0),
+                          _emailTextField(validationBloc),
+                          SizedBox(height: 25.0),
+                          _passwordTextField(validationBloc),
+                        ],
+                      ),
+                    ),
+                  ),
                 ),
-                Container(
-                  child: Stack(
-                    //fit: StackFit.expand,
-                    children: <Widget>[
-                      Container(
-                        height: screenSize.height - 400,
-                        width: screenSize.width - 60,
-                        decoration: goldenContainerBoxDecoration(),
-                        child: SingleChildScrollView(
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Container(
-                                padding: EdgeInsets.only(left: 20, right: 20),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    goldenContainerText('Welcome to MovieMate'),
-                                    SizedBox(
-                                      height: 20,
-                                    ),
-                                    _usernameTextField(),
-                                    SizedBox(
-                                      height: 20.0,
-                                    ),
-                                    _emailTextField(),
-                                    SizedBox(
-                                      height: 20.0,
-                                    ),
-                                    _passwordTextField(),
-                                  ],
-                                ),
-                              ),
-                            ],
+              ),
+              _signUpButton(validationBloc),
+              Column(
+                children: [
+                  Container(
+                    width: double.infinity,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        Text(
+                          "Already have an account?",
+                          style: TextStyle(
+                            color: Colors.white,
                           ),
                         ),
-                      ),
-                    ],
+                        TextButton(
+                          onPressed: () {
+                            widget.toggleView();
+                            print('Switched to Login Screen');
+                          },
+                          child: Text(
+                            'Click Here',
+                            textAlign: TextAlign.left,
+                            style: TextStyle(
+                                color: Colors.amber,
+                                fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-                _signUpButton(),
-                Container(
-                  width: double.infinity,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      Text(
-                        "Already have an account?",
-                        style: TextStyle(
+                  Container(
+                    height: 25.0,
+                    child: Text(
+                      "OR",
+                      style: TextStyle(
                           color: Colors.white,
-                        ),
-                      ),
-                      TextButton(
-                        onPressed: () {
-                          widget.toggleView();
-                          print('Switched to Login Screen');
-                        },
-                        child: Text(
-                          'Click Here',
-                          textAlign: TextAlign.left,
-                          style: TextStyle(
-                              color: Colors.amber, fontWeight: FontWeight.bold),
-                        ),
-                      ),
-                    ],
+                          fontFamily: 'RobotoCondensed',
+                          fontWeight: FontWeight.bold,
+                          fontSize: 15.0),
+                    ),
                   ),
-                ),
-                Container(
-                  height: 25.0,
-                  child: Text(
-                    "OR",
-                    style: TextStyle(
-                        color: Colors.amber,
-                        fontFamily: 'RobotoCondensed',
-                        fontWeight: FontWeight.bold,
-                        fontSize: 15.0),
-                  ),
-                ),
-                googleSignInButton(),
-              ],
-            ),
+                ],
+              ),
+              googleSignInButton(),
+            ],
           ),
         ),
       ),
     );
+  }
+
+  void onListen() => setState(() {});
+
+  Future<void> _registerUser(
+      String email, String password, String username) async {
+    if (_formKey.currentState.validate()) {
+      dynamic result = await _authService.registerWithEmailAndPassword(
+          email, password, username);
+      if (result == null) {
+        print('Email in use');
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text('Email already in use')));
+      } else {
+        print('Registration success');
+      }
+    }
+  }
+
+  Widget _usernameTextField(AuthValidationBloc validationBloc) {
+    return StreamBuilder<String>(
+        stream: validationBloc.username,
+        builder: (context, snapshot) {
+          return TextFormField(
+            controller: _usernameController,
+            onChanged: validationBloc.changeUsername,
+            decoration: textInputDecoration(
+                    'Username', 'Enter an username', _usernameController)
+                .copyWith(
+                    errorText: snapshot.error,
+                    prefixIcon: Icon(Icons.person_sharp)),
+            keyboardType: TextInputType.emailAddress,
+            autofillHints: [AutofillHints.email],
+          );
+        });
+  }
+
+  Widget _emailTextField(AuthValidationBloc validationBloc) {
+    return StreamBuilder<String>(
+        stream: validationBloc.email,
+        builder: (context, snapshot) {
+          return TextFormField(
+            controller: _emailController,
+            onChanged: validationBloc.changeEmail,
+            decoration:
+                textInputDecoration('Email', 'Enter an Email', _emailController)
+                    .copyWith(
+                        errorText: snapshot.error,
+                        prefixIcon: Icon(Icons.email)),
+            keyboardType: TextInputType.emailAddress,
+            autofillHints: [AutofillHints.email],
+          );
+        });
+  }
+
+  Widget _passwordTextField(AuthValidationBloc validationBloc) {
+    return StreamBuilder<String>(
+        stream: validationBloc.password,
+        builder: (context, snapshot) {
+          return TextFormField(
+            controller: _passwordController,
+            obscureText: true,
+            onChanged: validationBloc.changePassword,
+            decoration: textInputDecoration(
+                    'Password', 'Enter a password', _passwordController)
+                .copyWith(
+              errorText: snapshot.error,
+              prefixIcon: Icon(Icons.lock),
+            ),
+          );
+        });
+  }
+
+  Widget _signUpButton(AuthValidationBloc validationBloc) {
+    username = _usernameController.text.trim();
+    email = _emailController.text.trim();
+    password = _passwordController.text.trim();
+    return StreamBuilder<bool>(
+        stream: validationBloc.validRegistration,
+        builder: (context, snapshot) {
+          return Stack(
+            children: [
+              Container(
+                alignment: Alignment.center,
+                child: Image.asset('assets/images/ticket.png',
+                    width: 56.18, height: 105.0),
+              ),
+              Container(
+                alignment: Alignment.center,
+                height: 100.0,
+                child: TextButton(
+                  onPressed: !snapshot.hasData
+                      ? null
+                      : () => _registerUser(email, password, username),
+                  child: Text(
+                    'Sign Up',
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 12,
+                      fontFamily: 'RobotoCondensed',
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          );
+        });
   }
 }

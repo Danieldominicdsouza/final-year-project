@@ -1,19 +1,13 @@
 import 'package:flutter/material.dart';
 
-Text appBarAppText() {
-  return Text(
-    "MovieMate",
-    style: TextStyle(
-        color: Colors.amber,
-        fontFamily: 'RobotoCondensed',
-        fontWeight: FontWeight.w600,
-        shadows: <Shadow>[
-          Shadow(
-            offset: Offset(1.0, 1.5),
-            color: Colors.black, // Color.fromARGB(80, 255, 255, 255),
-            blurRadius: 1,
-          ),
-        ]),
+TextFormField textFormField(
+    TextEditingController controller, String labelText, String hintText) {
+  return TextFormField(
+    controller: controller,
+    // onChanged: validationBloc.changeEmail,
+    decoration: textInputDecoration(labelText, hintText, controller),
+    // keyboardType: TextInputType.emailAddress,
+    // autofillHints: [AutofillHints.email],
   );
 }
 

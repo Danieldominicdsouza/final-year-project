@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:movie_mate/src/global/shared/constants.dart';
 import 'package:movie_mate/src/models/user.dart';
 import 'package:movie_mate/src/services/authenticaitonService.dart';
 import 'dart:math';
@@ -14,7 +15,7 @@ class TestHomeScreen extends StatelessWidget {
       backgroundColor: Colors.black,
       appBar: AppBar(
         backgroundColor: Colors.grey[900],
-        title: appBarAppText(),
+        title: appBarText,
         actions: [
           Row(
             children: [
