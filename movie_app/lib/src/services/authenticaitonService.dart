@@ -1,10 +1,13 @@
-import 'package:email_validator/email_validator.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:movie_mate/src/models/user.dart';
+import 'package:movie_mate/src/services/databaseService.dart';
+import 'package:email_validator/email_validator.dart';
 
 class AuthService {
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
+  final DatabaseService _databaseService = DatabaseService();
 
+  //Creates MyUser objet from a Firebase User
   MyUser _myUserFromFirebase(User user) {
     return user != null ? MyUser(uid: user.uid, email: user.email) : null;
   }
@@ -35,21 +38,22 @@ class AuthService {
       UserCredential userResult = await _firebaseAuth
           .signInWithEmailAndPassword(email: email, password: password);
       User user = userResult.user;
-      print(_myUserFromFirebase(user));
       return _myUserFromFirebase(user);
     } on FirebaseAuthException catch (e) {
       return e.message;
+      //return null;
     }
   }
 
   //Register with email and password
-  Future registerWithEmailAndPassword(String email, String password) async {
+  Future registerWithEmailAndPassword(
+      String email, String password, String username) async {
     try {
       UserCredential userResult = await _firebaseAuth
           .createUserWithEmailAndPassword(email: email, password: password);
       User user = userResult.user;
-      await verifyEmail();
-      print(_myUserFromFirebase(user));
+      user.updateProfile(displayName: username);
+      print('User display name is ${user.displayName}');
       return _myUserFromFirebase(user);
     } on FirebaseAuthException catch (e) {
       print(e.toString());
@@ -71,16 +75,35 @@ class AuthService {
     try {
       User user = _firebaseAuth.currentUser;
       return await user.sendEmailVerification();
-    } on FirebaseException catch (e) {
+    } on FirebaseAuthException catch (e) {
       print(e.toString());
       return null;
     }
   }
 
-  String emailValidation(String email) {
-    return email != null && EmailValidator.validate(email)
+  Future resetPassword(String email) async {
+    try {
+      return await _firebaseAuth.sendPasswordResetEmail(email: email);
+    } on FirebaseAuthException catch (e) {
+      print(e.toString());
+    }
+  }
+
+  String usernameValidation(String username) {
+    return username.isNotEmpty && username.length > 4
         ? null
-        : 'Enter a valid Email';
+        : 'Enter a valid Username';
+  }
+
+  String emailValidation(String email) {
+    if (email != null && EmailValidator.validate(email))
+    // RegExp(r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$')
+    //     .hasMatch(email)) {
+    {
+      return null;
+    } else {
+      return 'Enter a valid Email';
+    }
   }
 
   String passwordValidation(String password) {

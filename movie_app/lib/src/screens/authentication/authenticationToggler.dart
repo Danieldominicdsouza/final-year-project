@@ -18,11 +18,7 @@ class _AuthenticationState extends State<AuthenticationToggler> {
   @override
   Widget build(BuildContext context) {
     return showSignIn == true
-        ? LoginScreen(
-            toggleView: toggleView,
-          )
-        : RegisterScreen(
-            toggleView: toggleView,
-          );
+        ? LoginScreen(toggleView: toggleView)
+        : RegisterScreen(toggleView: toggleView);
   }
 }
