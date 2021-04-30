@@ -7,7 +7,7 @@ class AuthService {
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
   final DatabaseService _databaseService = DatabaseService();
 
-  //Creates MyUser objet from a Firebase User
+  //Creates MyUser object from a Firebase User
   MyUser _myUserFromFirebase(User user) {
     return user != null ? MyUser(uid: user.uid, email: user.email) : null;
   }
@@ -52,8 +52,10 @@ class AuthService {
       UserCredential userResult = await _firebaseAuth
           .createUserWithEmailAndPassword(email: email, password: password);
       User user = userResult.user;
-      user.updateProfile(displayName: username);
-      print('User display name is ${user.displayName}');
+
+      //create new document for user with userUid
+      await DatabaseService(userUid: user.uid).updateUserData(name: username, email: email);
+
       return _myUserFromFirebase(user);
     } on FirebaseAuthException catch (e) {
       print(e.toString());

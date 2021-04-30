@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:movie_mate/src/components/mediaCard.dart';
-import 'package:movie_mate/src/services/authenticaitonService.dart';
+import 'package:movie_mate/src/components/movieList.dart';
+import 'package:movie_mate/src/global/shared/constants.dart';
+import 'package:movie_mate/src/models/movie.dart';
+import 'package:movie_mate/src/services/authenticationService.dart';
+import 'package:movie_mate/src/services/databaseService.dart';
+import 'package:provider/provider.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -70,116 +75,133 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     final Size screenSize = MediaQuery.of(context).size;
     final _authService = AuthService();
+    final _databaseService = DatabaseService();
 
-    return SafeArea(
-      child: Container(
-        child: Scaffold(
-          backgroundColor: Colors.black,
-          appBar: AppBar(
-            backgroundColor: Colors.black,
-            leading: Row(
-              children: [
-                IconButton(
-                  icon: Icon(Icons.logout),
-                  color: Color.fromARGB(255, 203, 155, 81), //Hex CB9B51
-                  //color: Colors.amber,
-                  onPressed: () {
-                    _authService.signOut();
-                  },
-                ),
-                TextButton(
-                  onPressed: () {},
-                  child: Text(
-                    'MovieMate',
-                    style: TextStyle(
-                      color: Colors.amber,
-                      fontFamily: 'RobotoCondensed',
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            actions: [
-              Padding(
-                padding: const EdgeInsets.only(top: 20),
-                child: Text(
-                  //*Will be dynamic
-                  'Username',
-                  style: TextStyle(
-                      fontFamily: 'RobotoCondensed',
-                      color: Colors.amber,
-                      shadows: <Shadow>[
-                        Shadow(
-                          offset: Offset(1.0, 1.5),
-                          color: Color.fromARGB(80, 255, 255, 255),
-                          blurRadius: 1,
-                        ),
-                      ]),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.fromLTRB(8, 0, 20, 0),
-                child: CircleAvatar(
-                  radius: 20,
-                  backgroundColor: Colors.grey[800],
-                ),
-              ),
-              //*Ideally we'll put the user avatar/custom image here/google profile image here
-              // IconButton(
-              //   onPressed: () {},
-              //   icon: Icon(Icons.person),
-              //   color: Colors.amber,
-              // ),
-            ],
-          ),
-          body: Container(
-            padding: EdgeInsets.only(top: 20),
-            child: Column(
-              children: [
-                SizedBox(
-                  height: 20,
-                ),
-                Container(
-                  width: screenSize.width,
-                  height: screenSize.height,
-                  child: Column(
-                    children: [
-                      Expanded(
-                        flex: 2,
-                        child: Stack(
-                          children: cardList,
-                        ),
-                      ),
-                      Expanded(
-                        flex: 1,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            IconButton(
-                              icon: Icon(Icons.clear_rounded),
-                              onPressed: () {},
-                              color: Colors.redAccent,
-                            ),
-                            //!This sized box will be dynamic on the width of the image gotten from the media query/screen size
-                            SizedBox(
-                              width: 50,
-                            ),
-                            IconButton(
-                                icon: Icon(Icons.check_circle_outline_rounded),
-                                color: Colors.greenAccent,
-                                onPressed: () {}),
-                          ],
-                        ),
-                      )
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ),
+
+
+    return StreamProvider<List<Movie>>.value(
+      value: _databaseService.movies,
+      child: Scaffold(
+        backgroundColor: Colors.black,
+        appBar: AppBar(
+          title: appBarText,
+          actions: [
+            Text('username'),
+            IconButton(icon: Icon(Icons.exit_to_app), onPressed:() => AuthService().signOut())
+          ],
         ),
+        body: MovieList(),
       ),
     );
+    // return SafeArea(
+    //   child: Container(
+    //     child: Scaffold(
+    //       backgroundColor: Colors.black,
+    //       appBar: AppBar(
+    //         backgroundColor: Colors.black,
+    //         leading: Row(
+    //           children: [
+    //             IconButton(
+    //               icon: Icon(Icons.logout),
+    //               color: Color.fromARGB(255, 203, 155, 81), //Hex CB9B51
+    //               //color: Colors.amber,
+    //               onPressed: () {
+    //                 _authService.signOut();
+    //               },
+    //             ),
+    //             TextButton(
+    //               onPressed: () {},
+    //               child: Text(
+    //                 'MovieMate',
+    //                 style: TextStyle(
+    //                   color: Colors.amber,
+    //                   fontFamily: 'RobotoCondensed',
+    //                   fontWeight: FontWeight.bold,
+    //                 ),
+    //               ),
+    //             ),
+    //           ],
+    //         ),
+    //         actions: [
+    //           Padding(
+    //             padding: const EdgeInsets.only(top: 20),
+    //             child: Text(
+    //               //*Will be dynamic
+    //               'Username',
+    //               style: TextStyle(
+    //                   fontFamily: 'RobotoCondensed',
+    //                   color: Colors.amber,
+    //                   shadows: <Shadow>[
+    //                     Shadow(
+    //                       offset: Offset(1.0, 1.5),
+    //                       color: Color.fromARGB(80, 255, 255, 255),
+    //                       blurRadius: 1,
+    //                     ),
+    //                   ]),
+    //             ),
+    //           ),
+    //           Padding(
+    //             padding: const EdgeInsets.fromLTRB(8, 0, 20, 0),
+    //             child: CircleAvatar(
+    //               radius: 20,
+    //               backgroundColor: Colors.grey[800],
+    //             ),
+    //           ),
+    //           //*Ideally we'll put the user avatar/custom image here/google profile image here
+    //           // IconButton(
+    //           //   onPressed: () {},
+    //           //   icon: Icon(Icons.person),
+    //           //   color: Colors.amber,
+    //           // ),
+    //         ],
+    //       ),
+    //       body: Container(
+    //         padding: EdgeInsets.only(top: 20),
+    //         child: Column(
+    //           children: [
+    //             SizedBox(
+    //               height: 20,
+    //             ),
+    //             Container(
+    //               width: screenSize.width,
+    //               height: screenSize.height,
+    //               child: Column(
+    //                 children: [
+    //                   Expanded(
+    //                     flex: 2,
+    //                     child: Stack(
+    //                       children: cardList,
+    //                     ),
+    //                   ),
+    //                   Expanded(
+    //                     flex: 1,
+    //                     child: Row(
+    //                       mainAxisAlignment: MainAxisAlignment.center,
+    //                       children: [
+    //                         IconButton(
+    //                           icon: Icon(Icons.clear_rounded),
+    //                           onPressed: () {},
+    //                           color: Colors.redAccent,
+    //                         ),
+    //                         //!This sized box will be dynamic on the width of the image gotten from the media query/screen size
+    //                         SizedBox(
+    //                           width: 50,
+    //                         ),
+    //                         IconButton(
+    //                             icon: Icon(Icons.check_circle_outline_rounded),
+    //                             color: Colors.greenAccent,
+    //                             onPressed: () {}),
+    //                       ],
+    //                     ),
+    //                   )
+    //                 ],
+    //               ),
+    //             ),
+    //           ],
+    //         ),
+    //       ),
+    //     ),
+    //   ),
+    // );
   }
 }

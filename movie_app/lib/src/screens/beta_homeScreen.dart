@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:movie_mate/src/global/shared/constants.dart';
 import 'package:movie_mate/src/models/user.dart';
-import 'package:movie_mate/src/services/authenticaitonService.dart';
+import 'package:movie_mate/src/services/authenticationService.dart';
 import 'dart:math';
 
 import 'package:movie_mate/src/widgets/auth_custom_widgets.dart';

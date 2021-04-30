@@ -11,6 +11,6 @@ class AuthState extends StatelessWidget {
     final user = Provider.of<MyUser>(context);
     print(user);
 
-    return user == null ? AuthenticationToggler() : TestHomeScreen(); //HomeScreen();
+    return user == null ? AuthenticationToggler() : HomeScreen(); //TestHomeScreen();
   }
 }

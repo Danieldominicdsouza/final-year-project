@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:movie_mate/src/screens/beta_homeScreen.dart';
 import 'package:movie_mate/src/services/authValidation_bloc.dart';
-import 'package:movie_mate/src/services/authenticaitonService.dart';
+import 'package:movie_mate/src/services/authenticationService.dart';
 import 'package:provider/provider.dart';
 
 import 'models/user.dart';
