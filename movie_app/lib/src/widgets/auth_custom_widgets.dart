@@ -1,4 +1,6 @@
+import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:flutter/material.dart';
+import 'package:movie_mate/src/blocs/google_signin_bloc.dart';
 
 TextFormField textFormField(
     TextEditingController controller, String labelText, String hintText) {
@@ -73,16 +75,15 @@ BoxDecoration goldenContainerBoxDecoration() {
   );
 }
 
-Text goldenContainerText(String text) {
-  return Text(
-    text,
-    textAlign: TextAlign.center,
-    style: TextStyle(
-      fontSize: 20,
-      fontFamily: 'RobotoCondensed',
-      fontWeight: FontWeight.bold,
-    ),
-  );
+TypewriterAnimatedText goldenContainerText(String text) {
+  return TypewriterAnimatedText(text,
+      textStyle: TextStyle(
+        fontSize: 20,
+        fontFamily: 'RobotoCondensed',
+        fontWeight: FontWeight.bold,
+        color: Colors.black,
+      ),
+      textAlign: TextAlign.center);
 }
 
 Widget googleSignInButton() {
@@ -92,7 +93,7 @@ Widget googleSignInButton() {
     child: ElevatedButton.icon(
       style: ElevatedButton.styleFrom(primary: Colors.white),
       onPressed: () {
-        print('google login page here');
+        GoogleSignInBloc().signInWithGoogle();
       },
       label: Text(
         'Sign In With Google',
@@ -109,4 +110,37 @@ Widget googleSignInButton() {
       ),
     ),
   );
+}
+
+class AuthPageToggle extends StatelessWidget {
+  final String pageIdentity;
+  final Function toggleView;
+
+  const AuthPageToggle({this.pageIdentity, this.toggleView});
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        Text(
+          pageIdentity,
+          style: TextStyle(
+            fontSize: 10,
+            color: Colors.grey[600],
+            fontFamily: 'RobotoCondensed',
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        IconButton(
+          icon: Icon(Icons.person_outline),
+          color: Colors.amber,
+          onPressed: () {
+            print('Switched from $pageIdentity Screen');
+            toggleView();
+          },
+        )
+      ],
+    );
+  }
 }

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:movie_mate/src/screens/authentication/loginScreen.dart';
-import 'package:movie_mate/src/screens/authentication/registerScreen.dart';
+import 'package:movie_mate/src/screens/authentication/login_screen.dart';
+import 'package:movie_mate/src/screens/authentication/register_screen.dart';
 
 class AuthenticationToggler extends StatefulWidget {
   @override

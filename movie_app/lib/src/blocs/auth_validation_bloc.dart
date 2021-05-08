@@ -14,15 +14,15 @@ class AuthValidationBloc {
   Stream<String> get password => _password.stream.transform(validatePassword);
   Stream<bool> get validLogin =>
       Rx.combineLatest2(email, password, (email, password) => true);
-   Stream<bool> get validRegistration =>
-      Rx.combineLatest3(username,email, password, (username, email, password) => true);
+  Stream<bool> get validRegistration => Rx.combineLatest3(
+      username, email, password, (username, email, password) => true);
 
   //Set
   Function(String) get changeUsername => _username.sink.add;
   Function(String) get changeEmail => _email.sink.add;
   Function(String) get changePassword => _password.sink.add;
 
-  dispose() {
+  void dispose() {
     _username.close();
     _email.close();
     _password.close();
@@ -31,10 +31,10 @@ class AuthValidationBloc {
   //Transformers
   final validateUsername = StreamTransformer<String, String>.fromHandlers(
       handleData: (username, sink) {
-    if (username.length > 4) {
+    if (username.length >= 4) {
       sink.add(username);
     } else {
-      sink.addError('Enter a username longer than 4 chars');
+      sink.addError('Enter a username longer than 3 chars');
     }
   });
 

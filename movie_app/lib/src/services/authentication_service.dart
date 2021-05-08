@@ -1,15 +1,29 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:movie_mate/src/models/user.dart';
-import 'package:movie_mate/src/services/databaseService.dart';
-import 'package:email_validator/email_validator.dart';
+import 'package:movie_mate/src/services/database_service.dart';
 
-class AuthService {
+class AuthService extends ChangeNotifier {
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
-  final DatabaseService _databaseService = DatabaseService();
+
+  bool _isAuthenticating = false;
+
+  bool get isAuthenticating => _isAuthenticating;
+
+  set isAuthenticating(bool isAuthenticatingState) {
+    _isAuthenticating = isAuthenticatingState;
+    notifyListeners();
+  }
 
   //Creates MyUser object from a Firebase User
   MyUser _myUserFromFirebase(User user) {
-    return user != null ? MyUser(uid: user.uid, email: user.email) : null;
+    return user != null
+        ? MyUser(
+            uid: user.uid,
+            email: user.email,
+            username: user.displayName ?? 'username',
+            photoURL: user.photoURL ?? '')
+        : null;
   }
 
   //Auth change Firebase user stream
@@ -18,6 +32,9 @@ class AuthService {
     // OR
     //.map((User user) => _myUserFromFirebase(user));
   }
+
+  //Auth state stream
+  Stream<User> get currentUserState => _firebaseAuth.authStateChanges();
 
   //Sign in Anonymously/Guest user
   Future signInAnon() async {
@@ -54,12 +71,29 @@ class AuthService {
       User user = userResult.user;
 
       //create new document for user with userUid
-      await DatabaseService(userUid: user.uid).updateUserData(name: username, email: email);
+      await DatabaseService(userUid: user.uid)
+          .updateUserData(name: username, email: email);
 
       return _myUserFromFirebase(user);
     } on FirebaseAuthException catch (e) {
       print(e.toString());
-      return null;
+      return e.message;
+      //return null;
+    }
+  }
+
+  //Common function that can be used with Google, Facebook, etc.
+  Future signInWithCredential(AuthCredential credential) async {
+    try {
+      UserCredential userResult =
+          await _firebaseAuth.signInWithCredential(credential);
+      User user = userResult.user;
+      await DatabaseService(userUid: user.uid).updateUserData(
+          name: user.displayName, email: user.email, photoURL: user.photoURL);
+      return _myUserFromFirebase(user);
+    } on FirebaseAuthException catch (e) {
+      print(e.message);
+      return e.message;
     }
   }
 
@@ -73,6 +107,7 @@ class AuthService {
     }
   }
 
+  //Email verification mail once the user is created
   Future verifyEmail() async {
     try {
       User user = _firebaseAuth.currentUser;
@@ -83,6 +118,7 @@ class AuthService {
     }
   }
 
+  //Reset password
   Future resetPassword(String email) async {
     try {
       return await _firebaseAuth.sendPasswordResetEmail(email: email);
@@ -91,24 +127,24 @@ class AuthService {
     }
   }
 
-  String usernameValidation(String username) {
-    return username.isNotEmpty && username.length > 4
-        ? null
-        : 'Enter a valid Username';
-  }
-
-  String emailValidation(String email) {
-    if (email != null && EmailValidator.validate(email))
-    // RegExp(r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$')
-    //     .hasMatch(email)) {
-    {
-      return null;
-    } else {
-      return 'Enter a valid Email';
-    }
-  }
-
-  String passwordValidation(String password) {
-    return password.length > 6 ? null : 'Enter a password longer than 6 chars';
-  }
+  // String usernameValidation(String username) {
+  //   return username.isNotEmpty && username.length > 4
+  //       ? null
+  //       : 'Enter a valid Username';
+  // }
+  //
+  // String emailValidation(String email) {
+  //   if (email != null && EmailValidator.validate(email))
+  //   // RegExp(r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$')
+  //   //     .hasMatch(email)) {
+  //   {
+  //     return null;
+  //   } else {
+  //     return 'Enter a valid Email';
+  //   }
+  // }
+  //
+  // String passwordValidation(String password) {
+  //   return password.length > 6 ? null : 'Enter a password longer than 6 chars';
+  // }
 }

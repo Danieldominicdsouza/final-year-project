@@ -14,14 +14,6 @@
       },
       "oauth_client": [
         {
-          "client_id": "292423713011-r7j1c2vhdgttcjn7v8hlnrvkdvldcbl6.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.moviemagic.moviemate",
-            "certificate_hash": "c18589b2b2bf0eff97aeafa429ea9f85f7f69047"
-          }
-        },
-        {
           "client_id": "292423713011-rh4ngk6lj238jh2obbc0i6sq8bgt6ikd.apps.googleusercontent.com",
           "client_type": 3
         }
