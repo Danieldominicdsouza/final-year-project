@@ -45,16 +45,16 @@ class AppDrawer extends StatelessWidget {
                     menuItemIconData: Icons.edit_outlined,
                     menuItemFunction: () => Navigator.pop(context),
                   ),
-                  DrawerMenuItem(
-                    menuItemTitle: 'Edit Genre Preference',
-                    menuItemIconData: Icons.local_movies_sharp,
-                    menuItemFunction: () => Navigator.pop(context),
-                  ),
-                  DrawerMenuItem(
-                    menuItemTitle: 'Edit Disliked Movies',
-                    menuItemIconData: Icons.movie_creation_outlined,
-                    menuItemFunction: () => Navigator.pop(context),
-                  ),
+                  // DrawerMenuItem(
+                  //   menuItemTitle: 'Edit Genre Preference',
+                  //   menuItemIconData: Icons.local_movies_sharp,
+                  //   menuItemFunction: () => Navigator.pop(context),
+                  // ),
+                  // DrawerMenuItem(
+                  //   menuItemTitle: 'Edit Disliked Movies',
+                  //   menuItemIconData: Icons.movie_creation_outlined,
+                  //   menuItemFunction: () => Navigator.pop(context),
+                  // ),
                   DrawerMenuItem(
                     menuItemTitle: 'Logout',
                     menuItemIconData: Icons.exit_to_app_outlined,

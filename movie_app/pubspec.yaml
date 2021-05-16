@@ -37,6 +37,10 @@ dependencies:
   flutter_bloc: ^7.0.0
   equatable: ^2.0.0
   rxdart: ^0.26.0
+  shared_preferences:
+
+  #random String
+  random_string:
 
   #auth dependencies
   google_sign_in: ^5.0.2

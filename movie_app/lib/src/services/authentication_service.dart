@@ -1,7 +1,13 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:google_sign_in/google_sign_in.dart';
+import 'package:movie_mate/src/global/auth_state_switcher.dart';
+import 'package:movie_mate/src/helperfunctions/sharedpref_helper.dart';
 import 'package:movie_mate/src/models/user.dart';
 import 'package:movie_mate/src/services/database_service.dart';
+import 'package:movie_mate/src/services/user_data_service.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class AuthService extends ChangeNotifier {
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
@@ -55,6 +61,19 @@ class AuthService extends ChangeNotifier {
       UserCredential userResult = await _firebaseAuth
           .signInWithEmailAndPassword(email: email, password: password);
       User user = userResult.user;
+
+      String username = await UserDataService().updatedUsers.forEach((doc) {
+        if (doc.email == user.email) {
+          return doc.username;
+        }
+      }).toString();
+
+      SharedPreferenceHelper().saveUserEmail(user.email);
+      SharedPreferenceHelper().saveUserId(user.uid);
+      SharedPreferenceHelper().saveUserName(username);
+      //SharedPreferenceHelper().saveDisplayName(user.displayName);
+      //SharedPreferenceHelper().saveUserProfileUrl(user.photoURL);
+
       return _myUserFromFirebase(user);
     } on FirebaseAuthException catch (e) {
       return e.message;
@@ -70,9 +89,16 @@ class AuthService extends ChangeNotifier {
           .createUserWithEmailAndPassword(email: email, password: password);
       User user = userResult.user;
 
+      AuthState.newUser = true;
       //create new document for user with userUid
-      await DatabaseService(userUid: user.uid)
+      await UserDataService(userUid: user.uid)
           .updateUserData(name: username, email: email);
+
+      SharedPreferenceHelper().saveUserEmail(user.email);
+      SharedPreferenceHelper().saveUserId(user.uid);
+      SharedPreferenceHelper().saveUserName(username);
+      SharedPreferenceHelper().saveDisplayName(user.displayName);
+      SharedPreferenceHelper().saveUserProfileUrl(user.photoURL);
 
       return _myUserFromFirebase(user);
     } on FirebaseAuthException catch (e) {
@@ -88,8 +114,15 @@ class AuthService extends ChangeNotifier {
       UserCredential userResult =
           await _firebaseAuth.signInWithCredential(credential);
       User user = userResult.user;
-      await DatabaseService(userUid: user.uid).updateUserData(
+      await UserDataService(userUid: user.uid).updateUserData(
           name: user.displayName, email: user.email, photoURL: user.photoURL);
+
+      SharedPreferenceHelper().saveUserEmail(user.email);
+      SharedPreferenceHelper().saveUserId(user.uid);
+      SharedPreferenceHelper().saveUserName(user.displayName);
+      SharedPreferenceHelper().saveDisplayName(user.displayName);
+      SharedPreferenceHelper().saveUserProfileUrl(user.photoURL);
+
       return _myUserFromFirebase(user);
     } on FirebaseAuthException catch (e) {
       print(e.message);
@@ -100,6 +133,9 @@ class AuthService extends ChangeNotifier {
   // Sign out
   Future signOut() async {
     try {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      prefs.clear();
+      await GoogleSignIn().disconnect();
       return await _firebaseAuth.signOut();
     } on FirebaseAuthException catch (error) {
       print(error.toString());
