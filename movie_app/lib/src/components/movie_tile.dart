@@ -62,6 +62,7 @@ class _MovieTileState extends State<MovieTile> {
               onDoubleTap: () => movieService.onMovieLiked(widget.movie),
               child: Container(
                 decoration: BoxDecoration(
+                  color: Colors.grey[900],
                   borderRadius: BorderRadius.circular(20),
                   image: DecorationImage(
                     image: NetworkImage(widget.movie.moviePosterPath),

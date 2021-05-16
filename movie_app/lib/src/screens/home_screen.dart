@@ -69,7 +69,8 @@ class _HomeScreenState extends State<HomeScreen> {
                         SizedBox(width: 5),
                         CircleAvatar(
                           backgroundColor: Colors.black,
-                          backgroundImage: NetworkImage(snapshot.data.photoURL),
+                          foregroundImage: NetworkImage(snapshot.data.photoURL),
+                          child: Icon(Icons.person),
                         ),
                       ],
                     );

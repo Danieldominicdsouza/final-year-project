@@ -1,12 +1,9 @@
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
 import 'package:movie_mate/src/models/genre.dart';
 import 'package:movie_mate/src/models/movie.dart';
 import 'package:movie_mate/src/screens/main/genre_movies_screen.dart';
 import 'package:movie_mate/src/screens/main/test_genre_movies_screen.dart';
 import 'package:movie_mate/src/services/genre_movies_list_service.dart';
-import 'package:provider/provider.dart';
 
 class AllGenreTile extends StatelessWidget {
   final Genre genre;
@@ -23,6 +20,7 @@ class AllGenreTile extends StatelessWidget {
               builder: (context) => TestGenreMoviesScreen(genre: genre.genre))),
       child: Container(
         decoration: BoxDecoration(
+          color: Colors.grey[900],
           borderRadius: BorderRadius.circular(10),
           image: DecorationImage(
               colorFilter: ColorFilter.mode(

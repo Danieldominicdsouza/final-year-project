@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:movie_mate/src/helperfunctions/sharedpref_helper.dart';
+import 'package:movie_mate/src/models/liked_movie.dart';
 import 'package:movie_mate/src/services/chat_service.dart';
 import 'package:random_string/random_string.dart';
 
@@ -35,8 +36,10 @@ class _ChatScreenState extends State<ChatScreen> {
   }
 
   addMessage(bool sendClicked) {
-    if (messageTextEditingController.text != "") {
-      String message = messageTextEditingController.text;
+    if (messageTextEditingController.text.isNotEmpty) {
+      //TODO: Made change here
+      String message =
+          messageTextEditingController.text.trim(); //TODO: Made change here
 
       var lastMessageTs = DateTime.now();
 
@@ -131,6 +134,70 @@ class _ChatScreenState extends State<ChatScreen> {
     getAndSetMessages();
   }
 
+  onMatchPressed() async {
+    List<LikedMovie> commonLikedMovies = await ChatService()
+        .getCommonLikedMovies(myName, widget.chatWithUsername);
+    return showModalBottomSheet(
+        context: context,
+        builder: (context) {
+          return Container(
+            color: Colors.grey[900],
+            child: Container(
+              decoration: BoxDecoration(
+                color: Colors.grey[850],
+                borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(40),
+                    topRight: Radius.circular(40)),
+              ),
+              child: Column(
+                children: [
+                  SizedBox(height: 10),
+                  FutureBuilder<double>(
+                      future: getMatchPercentage(),
+                      builder: (context, snapshot) {
+                        if (!snapshot.hasData)
+                          return CircularProgressIndicator();
+
+                        return Text(
+                          snapshot.data.toStringAsFixed(1) + ' %',
+                          style: TextStyle(
+                              fontSize: 30,
+                              color: Colors.amber,
+                              fontWeight: FontWeight.bold,
+                              fontFamily: 'RobotoCondensed'),
+                        );
+                      }),
+                  SizedBox(height: 10),
+                  Text(
+                    '${commonLikedMovies.length.toString()} Common Movies',
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                  SizedBox(height: 10),
+                  Expanded(
+                    child: ListView.builder(
+                        itemCount: commonLikedMovies.length,
+                        itemBuilder: (context, index) {
+                          return ListTile(
+                            contentPadding: EdgeInsets.fromLTRB(20, 0, 20, 10),
+                            leading: Image.network(
+                                commonLikedMovies[index].posterURL),
+                            title: Text(commonLikedMovies[index].movieName),
+                          );
+                        }),
+                  )
+                ],
+              ),
+            ),
+          );
+        });
+  }
+
+  Future<double> getMatchPercentage() async {
+    double matchPercentage =
+        await ChatService().getMatchPercentage(myName, widget.chatWithUsername);
+    return matchPercentage;
+  }
+
   @override
   void initState() {
     doThisOnLaunch();
@@ -142,6 +209,26 @@ class _ChatScreenState extends State<ChatScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.name),
+        actions: [
+          GestureDetector(
+            onTap: () => onMatchPressed(),
+            child: Container(
+              margin: EdgeInsets.all(10),
+              padding: EdgeInsets.all(10),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(20),
+                color: Colors.orange,
+              ),
+              child: Text('Match'),
+            ),
+          ),
+        ],
+        // child: Row(
+        //   children: [
+        //     Text(widget.name),
+        //     Text(getMatchPercentage().toString()),
+        //   ],
+        // ),
       ),
       body: Container(
         child: Stack(
@@ -154,6 +241,18 @@ class _ChatScreenState extends State<ChatScreen> {
                 padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                 child: Row(
                   children: [
+                    // GestureDetector(
+                    //   onTap: () => onMatchPressed(),
+                    //   child: Container(
+                    //     padding: EdgeInsets.all(10),
+                    //     decoration: BoxDecoration(
+                    //       borderRadius: BorderRadius.circular(50),
+                    //       color: Colors.orange,
+                    //     ),
+                    //     child: Text('Match'),
+                    //   ),
+                    // ),
+                    SizedBox(width: 10),
                     Expanded(
                         child: TextField(
                       controller: messageTextEditingController,

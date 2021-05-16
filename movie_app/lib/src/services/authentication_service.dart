@@ -62,16 +62,24 @@ class AuthService extends ChangeNotifier {
           .signInWithEmailAndPassword(email: email, password: password);
       User user = userResult.user;
 
-      String username = await UserDataService().updatedUsers.forEach((doc) {
-        if (doc.email == user.email) {
-          return doc.username;
-        }
-      }).toString();
+      QuerySnapshot user1Snapshot = await FirebaseFirestore.instance
+          .collection('users')
+          .where('email', isEqualTo: user.email)
+          .get();
+
+      String username = user1Snapshot.docs[0]['username'];
+
+      // String username =
+      //     await UserDataService(userUid: user.uid).updatedUsers.forEach((doc) {
+      //   if (doc.email == user.email) {
+      //     return doc.username;
+      //   }
+      // }).toString();
 
       SharedPreferenceHelper().saveUserEmail(user.email);
       SharedPreferenceHelper().saveUserId(user.uid);
       SharedPreferenceHelper().saveUserName(username);
-      //SharedPreferenceHelper().saveDisplayName(user.displayName);
+      SharedPreferenceHelper().saveDisplayName(username);
       //SharedPreferenceHelper().saveUserProfileUrl(user.photoURL);
 
       return _myUserFromFirebase(user);
@@ -135,7 +143,8 @@ class AuthService extends ChangeNotifier {
     try {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       prefs.clear();
-      await GoogleSignIn().disconnect();
+      //await GoogleSignIn().disconnect();
+      GoogleSignIn().disconnect();
       return await _firebaseAuth.signOut();
     } on FirebaseAuthException catch (error) {
       print(error.toString());

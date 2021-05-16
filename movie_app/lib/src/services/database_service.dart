@@ -133,6 +133,18 @@ class DatabaseService {
   //movie list from snapshot
   List<Movie> _movieListFromSnapshot(QuerySnapshot moviesSnapshot) {
     return moviesSnapshot.docs.map((movieDoc) {
+      List<String> castList = [];
+      List<String> directorList = [];
+      List<String> screenplayList = [];
+
+      movieDoc.data()['cast'].forEach((actor) => castList.add(actor));
+      movieDoc
+          .data()['directors']
+          .forEach((director) => directorList.add(director));
+      movieDoc
+          .data()['screenplay']
+          .forEach((screenplay) => screenplayList.add(screenplay));
+
       return Movie(
         movieID: movieDoc.data()['movie-id'],
         movieName: movieDoc.data()['movie-name'] ?? 'Movie Name',
@@ -142,6 +154,9 @@ class DatabaseService {
         moviePosterPath: movieDoc.data()['posterURL'] ?? '',
         releaseDate: movieDoc.data()['initial-release'],
         language: movieDoc.data()['language'],
+        cast: castList,
+        directors: directorList,
+        screenplay: screenplayList,
       );
     }).toList();
   }

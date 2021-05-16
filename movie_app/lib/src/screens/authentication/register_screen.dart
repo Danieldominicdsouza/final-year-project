@@ -86,7 +86,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             goldenContainerText('Welcome to MovieMate')
                                 .textWidget('Welcome to MovieMate'),
                             SizedBox(height: 25.0),
-                            _usernameTextField(validationBloc),
+                            Theme(
+                              data: ThemeData(
+                                primaryColor: Colors.brown,
+                                brightness: Brightness.light,
+                              ),
+                              child: _usernameTextField(validationBloc),
+                            ),
                             SizedBox(height: 25.0),
                             EmailPassword(
                               emailController: _emailController,

@@ -24,10 +24,10 @@ InputDecoration textInputDecoration(
             onPressed: () => controller.clear(),
           ),
     hintText: hintText,
-    focusedBorder: OutlineInputBorder(
-      borderSide: BorderSide(color: Colors.blueGrey),
-      borderRadius: BorderRadius.circular(50),
-    ),
+    // focusedBorder: OutlineInputBorder(
+    //   borderSide: BorderSide(color: Colors.blueGrey),
+    //   borderRadius: BorderRadius.circular(50),
+    // ),
     border: OutlineInputBorder(
       borderRadius: BorderRadius.circular(50),
     ),

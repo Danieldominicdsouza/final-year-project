@@ -24,9 +24,10 @@ class AppDrawer extends StatelessWidget {
                   children: [
                     CircleAvatar(
                       backgroundColor: Colors.black,
-                      backgroundImage: NetworkImage(
+                      foregroundImage: NetworkImage(
                           myUser.photoURL.replaceFirst('s96', 's400')),
                       radius: 30,
+                      child: Icon(Icons.person),
                     ),
                     Text(
                       myUser.username,

@@ -33,7 +33,7 @@ class _MovieListState extends State<MovieList> {
     //       return MovieTile(movie: movies[index]);
     //     });
     return Center(
-      child: Stack(
+      child: ListView(
         children: movieList,
       ),
     );

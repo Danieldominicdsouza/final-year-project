@@ -59,7 +59,7 @@ class MovieService with ChangeNotifier {
         .doc(_firebaseAuth.currentUser.uid)
         .collection('likedMovies')
         .snapshots()
-        .map(_likedMoviesFromSnapshot);
+        .map(likedMoviesFromSnapshot);
   }
 
   Stream<List<DislikedMovie>> get dislikedMovies {
@@ -67,10 +67,10 @@ class MovieService with ChangeNotifier {
         .doc(_firebaseAuth.currentUser.uid)
         .collection('dislikedMovies')
         .snapshots()
-        .map(_dislikedMoviesFromSnapshot);
+        .map(dislikedMoviesFromSnapshot);
   }
 
-  List<LikedMovie> _likedMoviesFromSnapshot(QuerySnapshot snapshot) {
+  List<LikedMovie> likedMoviesFromSnapshot(QuerySnapshot snapshot) {
     return snapshot.docs.map((doc) {
       return LikedMovie(
         movieName: doc.data()['movie-name'],
@@ -81,7 +81,7 @@ class MovieService with ChangeNotifier {
     }).toList();
   }
 
-  List<DislikedMovie> _dislikedMoviesFromSnapshot(QuerySnapshot snapshot) {
+  List<DislikedMovie> dislikedMoviesFromSnapshot(QuerySnapshot snapshot) {
     return snapshot.docs.map((doc) {
       return DislikedMovie(
         movieName: doc.data()['movie-name'],

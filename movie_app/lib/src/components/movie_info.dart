@@ -7,9 +7,9 @@ class MovieInfo extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    List<String> castList = movie.cast;
-    List<String> directorList = movie.directors;
-    List<String> screenplayList = movie.screenplay;
+    List<String> castList = movie.cast ?? [];
+    List<String> directorList = movie.directors ?? [];
+    List<String> screenplayList = movie.screenplay ?? [];
     List<Widget> castCardList = [];
     castList.forEach((actor) {
       return castCardList.add(Row(
