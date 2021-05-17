@@ -3,12 +3,13 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 
 class SplashScreen extends StatelessWidget {
+  static const pageRouteId = '/splash';
 
   @override
   Widget build(BuildContext context) {
     Timer(
       Duration(seconds: 4),
-          () => {
+      () => {
         Navigator.of(context).pushReplacementNamed('/auth'),
       },
     );

@@ -11,7 +11,42 @@ class MovieService with ChangeNotifier {
   final CollectionReference userCollection =
       FirebaseFirestore.instance.collection('users');
 
-  onMovieLiked(Movie movie) {
+  // final CollectionReference movieCollection =
+  //     FirebaseFirestore.instance.collection('movies');
+  //
+  // Future incrementLike(String movieId) async {
+  //   DocumentSnapshot movieSnapshot = await movieCollection.doc(movieId).get();
+  //   int likes = movieSnapshot.get('likes');
+  //   likes++;
+  //   movieCollection.doc(movieId).update({'likes': likes});
+  //   print(likes.toString());
+  // }
+  //
+  // Future decrementLike(String movieId) async {
+  //   DocumentSnapshot movieSnapshot = await movieCollection.doc(movieId).get();
+  //   int likes = movieSnapshot.get('likes');
+  //   likes--;
+  //   movieCollection.doc(movieId).update({'likes': likes});
+  //   print(likes.toString());
+  // }
+  //
+  // Future incrementDislike(String movieId) async {
+  //   DocumentSnapshot movieSnapshot = await movieCollection.doc(movieId).get();
+  //   int dislikes = movieSnapshot.get('dislikes');
+  //   dislikes++;
+  //   movieCollection.doc(movieId).update({'dislikes': dislikes});
+  //   print(dislikes.toString());
+  // }
+  //
+  // Future decrementDislike(String movieId) async {
+  //   DocumentSnapshot movieSnapshot = await movieCollection.doc(movieId).get();
+  //   int dislikes = movieSnapshot.get('dislikes');
+  //   dislikes--;
+  //   movieCollection.doc(movieId).update({'dislikes': dislikes});
+  //   print(dislikes.toString());
+  // }
+
+  onMovieLiked(Movie movie) async {
     userCollection
         .doc(_firebaseAuth.currentUser.uid)
         .collection('likedMovies')
@@ -22,17 +57,28 @@ class MovieService with ChangeNotifier {
       'posterURL': movie.moviePosterPath,
       'liked': true,
     });
+    //await incrementLike(movie.movieID);
   }
 
-  onMovieRemoveLiked(Movie movie) {
+  onMovieRemoveLiked(Movie movie) async {
     userCollection
         .doc(_firebaseAuth.currentUser.uid)
         .collection('likedMovies')
         .doc(movie.movieID)
         .delete();
+    // await decrementLike(movie.movieID);
   }
 
-  onMovieDisliked(Movie movie) {
+  onMovieRemoveLikedViaUid(String movieID) async {
+    userCollection
+        .doc(_firebaseAuth.currentUser.uid)
+        .collection('likedMovies')
+        .doc(movieID)
+        .delete();
+    // await decrementLike(movieID);
+  }
+
+  onMovieDisliked(Movie movie) async {
     userCollection
         .doc(_firebaseAuth.currentUser.uid)
         .collection('dislikedMovies')
@@ -43,14 +89,25 @@ class MovieService with ChangeNotifier {
       'posterURL': movie.moviePosterPath,
       'disliked': true,
     });
+    // await incrementDislike(movie.movieID);
   }
 
-  onMovieRemoveDisliked(Movie movie) {
+  onMovieRemoveDisliked(Movie movie) async {
     userCollection
         .doc(_firebaseAuth.currentUser.uid)
         .collection('dislikedMovies')
         .doc(movie.movieID)
         .delete();
+    // await decrementLike(movie.movieID);
+  }
+
+  onMovieRemoveDislikedViaUid(String movieID) async {
+    userCollection
+        .doc(_firebaseAuth.currentUser.uid)
+        .collection('dislikedMovies')
+        .doc(movieID)
+        .delete();
+    // await decrementLike(movieID);
   }
 
   //Getter

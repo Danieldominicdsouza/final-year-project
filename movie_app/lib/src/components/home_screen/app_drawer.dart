@@ -41,11 +41,11 @@ class AppDrawer extends StatelessWidget {
               ),
               Column(
                 children: [
-                  DrawerMenuItem(
-                    menuItemTitle: 'Edit Profile',
-                    menuItemIconData: Icons.edit_outlined,
-                    menuItemFunction: () => Navigator.pop(context),
-                  ),
+                  // DrawerMenuItem(
+                  //   menuItemTitle: 'Edit Profile',
+                  //   menuItemIconData: Icons.edit_outlined,
+                  //   menuItemFunction: () => Navigator.pop(context),
+                  // ),
                   // DrawerMenuItem(
                   //   menuItemTitle: 'Edit Genre Preference',
                   //   menuItemIconData: Icons.local_movies_sharp,

@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 
-class LikedMovie {
+class LikedMovie extends ChangeNotifier {
   final String movieName;
   final String movieId;
   final String posterURL;

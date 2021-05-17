@@ -30,16 +30,13 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     final MyUser myUser = Provider.of<MyUser>(context);
-    //final Size screenSize = MediaQuery.of(context).size;
     final userDataService = UserDataService(userUid: myUser.uid);
 
     final List<Widget> _pages = [
       MovieList(),
       AllGenreScreen(),
-      //Center(child: Text('Genre Page')),
       MyMoviesScreen(),
       ChatHome(),
-      // Center(child: Text('Liked Movies Page')),
     ];
 
     return StreamProvider<List<Movie>>.value(

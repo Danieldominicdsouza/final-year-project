@@ -1,19 +1,20 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:movie_mate/src/screens/beta_home_screen.dart';
 import 'package:movie_mate/src/blocs/auth_validation_bloc.dart';
 import 'package:movie_mate/src/screens/new_user_screen.dart';
 import 'package:movie_mate/src/services/authentication_service.dart';
-import 'package:movie_mate/src/services/database_service.dart';
+
+import 'package:movie_mate/src/services/movie_service.dart';
 import 'package:provider/provider.dart';
 
+import 'models/disliked_movie.dart';
 import 'models/genre.dart';
+import 'models/liked_movie.dart';
 import 'models/user.dart';
 import 'screens/home_screen.dart';
 import 'screens/splash_screen.dart';
 import 'global/auth_state_switcher.dart';
 import 'services/genre_list_service.dart';
-import 'services/user_data_service.dart';
 
 class App extends StatelessWidget {
   @override
@@ -32,6 +33,10 @@ class App extends StatelessWidget {
         StreamProvider<List<Genre>>(
             create: (context) => GenreListService().genres,
             initialData: []), //Use this to pass ListGenre through whole app
+        StreamProvider<List<LikedMovie>>.value(
+            value: MovieService().likedMovies, initialData: []),
+        StreamProvider<List<DislikedMovie>>.value(
+            value: MovieService().dislikedMovies, initialData: []),
       ],
       child: MaterialApp(
         title: 'MovieMate',
@@ -42,9 +47,10 @@ class App extends StatelessWidget {
           brightness: Brightness.dark,
           visualDensity: VisualDensity.adaptivePlatformDensity,
         ),
-        initialRoute: AuthState.pageRouteId,
+        initialRoute: SplashScreen.pageRouteId,
         routes: {
-          '/splash': (context) => SplashScreen(),
+          SplashScreen.pageRouteId: (context) => SplashScreen(),
+          //'/splash': (context) => SplashScreen(),
           HomeScreen.pageRouteId: (context) => HomeScreen(),
           //'/home': (context) => HomeScreen(),
           '/testHome': (context) => TestHomeScreen(),

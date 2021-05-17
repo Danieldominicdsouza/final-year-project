@@ -53,6 +53,7 @@ class MyMoviesScreen extends StatelessWidget {
                         itemCount: snapshot.data.length ?? 0,
                         itemBuilder: (context, index) {
                           return LikedMovieTile(
+                            movieId: snapshot.data[index].movieId,
                             movieName: snapshot.data[index].movieName,
                             posterURL: snapshot.data[index].posterURL,
                           );
@@ -75,6 +76,7 @@ class MyMoviesScreen extends StatelessWidget {
                         itemCount: snapshot.data.length ?? 0,
                         itemBuilder: (context, index) {
                           return disLikedMovieTile(
+                            movieId: snapshot.data[index].movieId,
                             movieName: snapshot.data[index].movieName,
                             posterURL: snapshot.data[index].posterURL,
                           );
@@ -102,8 +104,10 @@ class MyMoviesScreen extends StatelessWidget {
     );
   }
 
-  Widget disLikedMovieTile({String movieName, String posterURL}) {
+  Widget disLikedMovieTile(
+      {String movieName, String posterURL, String movieId}) {
     return ListTile(
+      onLongPress: () => MovieService().onMovieRemoveDislikedViaUid(movieId),
       contentPadding: EdgeInsets.fromLTRB(40, 10, 20, 10),
       leading: Image(
         image: NetworkImage(posterURL ?? ''),
@@ -122,12 +126,14 @@ class MyMoviesScreen extends StatelessWidget {
 class LikedMovieTile extends StatelessWidget {
   final String movieName;
   final String posterURL;
+  final String movieId;
 
-  const LikedMovieTile({Key key, this.movieName, this.posterURL})
+  const LikedMovieTile({Key key, this.movieName, this.posterURL, this.movieId})
       : super(key: key);
   @override
   Widget build(BuildContext context) {
     return ListTile(
+      onLongPress: () => MovieService().onMovieRemoveLikedViaUid(movieId),
       contentPadding: EdgeInsets.fromLTRB(40, 10, 20, 10),
       leading: Image(
         image: NetworkImage(posterURL ?? ''),

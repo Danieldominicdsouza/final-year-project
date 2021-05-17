@@ -1,8 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:movie_mate/src/models/disliked_movie.dart';
+import 'package:movie_mate/src/models/liked_movie.dart';
 import 'package:movie_mate/src/models/movie.dart';
 import 'package:movie_mate/src/services/movie_service.dart';
+import 'package:provider/provider.dart';
 
 import 'movie_info.dart';
 
@@ -40,6 +43,25 @@ class _MovieTileState extends State<MovieTile> {
 
   @override
   Widget build(BuildContext context) {
+    final List<LikedMovie> listOfLikedMovies =
+        Provider.of<List<LikedMovie>>(context);
+    final List<DislikedMovie> listOfDislikedMovies =
+        Provider.of<List<DislikedMovie>>(context);
+
+    listOfLikedMovies.forEach((movie) {
+      if (widget.movie.movieID == movie.movieId)
+        setState(() {
+          liked = true;
+        });
+    });
+
+    listOfDislikedMovies.forEach((movie) {
+      if (widget.movie.movieID == movie.movieId)
+        setState(() {
+          disliked = true;
+        });
+    });
+
     return Container(
       height: 500,
       width: 300,
@@ -59,7 +81,12 @@ class _MovieTileState extends State<MovieTile> {
                   ),
                 ),
               ),
-              onDoubleTap: () => movieService.onMovieLiked(widget.movie),
+              onDoubleTap: () {
+                setState(() {
+                  liked = true;
+                });
+                movieService.onMovieLiked(widget.movie);
+              },
               child: Container(
                 decoration: BoxDecoration(
                   color: Colors.grey[900],
